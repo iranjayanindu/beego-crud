@@ -1,0 +1,59 @@
+<div class="modal-dialog">
+    <div class="modal-content">
+
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h3 class="smaller lighter blue no-margin">Header</h3>
+        </div>
+
+        <div >
+            <label class="col-sm-3 control-label no-padding-right" for="UserId">User ID</label>
+            <div class="col-sm-9">
+                <input type="text" id="UserId" name="UserName" placeholder="User ID" class="col-xs-10 col-sm-5"
+                       value="{{.User.Id}}"/>
+            </div>
+        </div>
+        <div class="modal-body">
+
+            <form class="form-horizontal" id="saveForm" role="form" action="/admin/user/save"
+                  method="post">
+                <div class="form-group">
+                    <label class="col-sm-3 control-label no-padding-right" for="UserName">User Name</label>
+                    <div class="col-sm-9">
+                        <input type="text" id="UserName" name="UserName" placeholder="User Name" class="col-xs-10 col-sm-5"
+                               value="{{.User.UserName}}"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label no-padding-right" for="address">Address</label>
+                    <div class="col-sm-9">
+                        <input type="text" id="address" name="Name" placeholder="Address" class="col-xs-10 col-sm-5"
+                               value="{{.User.Address}}"/>
+                    </div>
+                </div>
+                <div class="modal-footer" style="background-color: white">
+                    <button class="btn btn-sm btn-primary" type="button" onclick="return save();">
+                        <i class="ace-icon fa fa-check"></i>
+                        Save
+                    </button>
+                    <button class="btn btn-sm btn-danger pull-right" data-dismiss="modal">
+                        <i class="ace-icon fa fa-times"></i>
+                        Cancel
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    function save() {
+        if ($('#saveForm').valid()) {
+            $.post("/admin/user/save", $("#saveForm").serialize(),
+                function (data) {
+                    window.location.reload();
+                });
+        }
+
+    }
+</script>

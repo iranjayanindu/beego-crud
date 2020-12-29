@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<!--    {{template "meta.html"}}-->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+<!--    <link rel="stylesheet" href="/static/css/font-awesome.min.css" />-->
+
+
+
+
+</head>
+<body class="no-skin">
+
+<div class="main-container ace-save-state" id="main-container">
+    <div class="main-content">
+            <form class="col-12 col-sm-12 col-mg-4 col-lg-4 col-xl-4" id="saveForm" role="form" action="/admin/user/save" method="post">
+                <input type="hidden" id="Id" name="Id" />
+                <div class="form-row">
+
+                    <div class="form-group col-md-6">
+                        <label for="UserName">Customer Name</label>
+
+                        <input type="text" class="form-control" id="UserName" placeholder="Name" name="UserName"  >
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="Address">Customer Address</label>
+                        <input type="text" class="form-control" id="Address" placeholder="Address" name="Address" >
+                    </div>
+                </div>
+
+
+                <button type="button" class="btn btn-success" id="Addbtn" onclick="return save();" >Add Customer</button>
+                <button type="button" class="btn btn-info" id="Updatebtn">Update Customer</button>
+                <button type="button" class="btn btn-warning" id="Deletebtn">Delete Customer</button>
+                <button type="button" class="btn btn-success" id="GetAll">GetAll</button>
+
+
+            </form>
+
+
+            <div class="row">
+                <div class="col-lg-1">
+                    <table id="simple-table" class="table  table-bordered table-hover" >
+                        <tr>
+                            <th>Id</th>
+                            <th>User Name</th>
+                            <th>Address</th>
+                            <th>Edit</th>
+
+                        </tr>
+                        {{range .List}}
+                        <tr>
+
+                            <td>{{.Id}}</td>
+                            <td>{{.UserName}}</td>
+                            <td>{{.Address}}</td>
+
+
+                            <td>
+                                <div class="hidden-sm hidden-xs btn-group">
+                                    <button class="btn btn-xs btn-info" onclick="showEditWindow('{{.Id}}');">
+                                        <i class="ace-icon fa fa-pencil bigger-120"></i>
+                                    </button>
+                                    <button class="btn btn-xs btn-danger" onclick="deleteConfirm('{{.Id}}');">
+                                        <i class="ace-icon fa fa-trash-o bigger-120"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        {{end}}
+                    </table>
+                </div><!-- /.span -->
+            </div>
+    </div>
+
+    <script type="text/javascript">
+
+        // Update user by Id
+        function showEditWindow(Id) {
+
+            $.ajax({
+                method: "Get",
+                url: SERVER_URL + "/admin/user/edit",
+                async: true,
+                data:{"Id":Id}
+            }).done(function (resp) {
+                console.log(resp)
+                console.log(resp.Id)
+                console.log(resp.Name)
+                console.log(resp.Address)
+                 $("#Id").val(resp.Id)
+                 $("#UserName").val(resp.Name)
+                 $("#Address").val(resp.Address)
+            }).fail(function (xhr) {
+                console.log("res :"+xhr)
+            });
+
+        }
+    </script>
+</div>
+
+
+<!--<script src="/static/js/bootstrap.min.js"></script>-->
+<!--<script src="/static/js/ace-extra.min.js"></script>-->
+<!--<script src="/static/js/ace.min.js"></script>-->
+<!--<script src="/static/js/bootbox.js"></script>-->
+<!--<script src="/static/js/ace-elements.min.js"></script>-->
+<script src="/static/js/jquery-2.1.4.min.js"></script>
+<script src="/static/js/jquery.validate.min.js"></script>
+<!--<script src="/static/js/validate_messages_zh.min.js"></script>-->
+
+<!--<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>-->
+<script type="text/javascript">
+    var SERVER_URL ="http://localhost:8080"
+
+    // Add function
+    $("#Addbtn").click(function () {
+
+        $.ajax({
+            method:"Post",
+            url: SERVER_URL+"/admin/user/save",
+            async: true,
+            data:$("#saveForm").serialize()
+        }).done(function (resp) {
+            window.location.reload();
+        }).fail(function (xhr) {
+
+        });
+    })
+
+
+
+
+    // Delete function
+    function deleteConfirm(Id){
+
+
+        $.ajax({
+            method: "POST",
+            url: SERVER_URL + "/admin/user/delete",
+            async: true,
+            data:{"Id":Id}
+        }).done(function (resp) {
+            window.location.reload();
+            console.log("success")
+        }).fail(function (xhr) {
+
+        });
+        console.log("ID is : "+Id);
+
+    }
+</script>
+</body>
+</html>
